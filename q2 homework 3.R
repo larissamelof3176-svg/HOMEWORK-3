@@ -1,0 +1,98 @@
+install.packages("palmerpenguins");
+
+library(palmerpenguins);
+
+penguins_data <- na.omit(penguins)
+
+#2.1
+
+plot(penguins_data$body_mass_g,
+     penguins_data$bill_length_mm,
+     xlab = "Massa corporal (g)",
+     ylab = "Comprimento do bico (mm)",
+     main = "Dispersão: Massa corporal X Comprimento do bico",
+     pch = 19)
+
+#2.2
+x <- penguins_data$body_mass_g
+y <- penguins_data$bill_length_mm
+
+beta1_hat <- sum((x-mean(x))*(y-mean(y))) / sum((x-mean(x))^2)
+beta0_hat <- mean(y) - beta1_hat*mean(x)
+
+beta0_hat
+beta1_hat
+
+modelo <- lm(bill_length_mm ~ body_mass_g, data = penguins_data)
+
+
+plot(penguins_data$body_mass_g,
+     penguins_data$bill_length_mm,
+     xlab = "Massa corporal (g)",
+     ylab = "Comprimento do bico (mm)",
+     main = "Dispersão com acrescimo da reta de regressão")
+
+abline(modelo)
+
+#2.3
+
+residuos <- resid(modelo)
+
+plot(penguins_data$body_mass_g, residuos,
+     xlab = "Massa corporal (g)",
+     ylab = "Resíduos (mm)",
+     main = "Resíduos X Massa corporal")
+
+RMSE <- sqrt(mean(residuos^2))
+RMSE
+
+R2 <- summary(modelo)$r.squared
+R2
+
+#2.4
+
+#criar outliar
+
+penguins_novo<- penguins_data
+
+penguins_novo$bill_length_mm[1] <- 100
+
+plot(penguins_novo$body_mass_g,
+     penguins_novo$bill_length_mm,
+     xlab = "Massa corporal (g)",
+     ylab = "Comprimento do bico (mm)",
+     main = "Nova Dispersão: Massa corporal X Comprimento do bico",
+     pch = 19)
+
+x_n <- penguins_novo$body_mass_g
+y_n <- penguins_novo$bill_length_mm
+
+beta1_hat_n <- sum((x_n-mean(x_n))*(y_n-mean(y_n))) / sum((x_n-mean(x_n))^2)
+beta0_hat_n <- mean(y_n) - beta1_hat_n*mean(x_n)
+
+beta0_hat_n
+beta1_hat_n
+
+modelo_novo <- lm(bill_length_mm ~ body_mass_g, data = penguins_novo)
+
+
+plot(penguins_novo$body_mass_g,
+     penguins_novo$bill_length_mm,
+     xlab = "Massa corporal (g)",
+     ylab = "Comprimento do bico (mm)",
+     main = "Nova Dispersão com acrescimo da reta de regressão")
+
+abline(modelo_novo)
+
+residuos_novo <- resid(modelo_novo)
+
+plot(penguins_novo$body_mass_g, residuos_novo,
+     xlab = "Massa corporal (g)",
+     ylab = "Resíduos (mm)",
+     main = "Novo Resíduos X Massa corporal")
+
+RMSE_novo <- sqrt(mean(residuos_novo^2))
+RMSE_novo
+
+R2_novo <- summary(modelo_novo)$r.squared
+R2_novo
